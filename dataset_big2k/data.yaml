@@ -1,0 +1,13 @@
+train: train/images
+val: valid/images
+test: test/images
+
+nc: 1
+names: ['Player']
+
+roboflow:
+  workspace: test-qdswo
+  project: test_1-vrj7y-fa34i
+  version: 1
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/test-qdswo/test_1-vrj7y-fa34i/dataset/1
