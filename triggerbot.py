@@ -8,10 +8,10 @@ import keyboard
 
 CUDA = torch.cuda.is_available()
 device = torch.device("cuda" if CUDA else "cpu")
-model = YOLO('models/best.pt', task='detect')
+model = YOLO('runs/detect/train3/weights/best.pt', task='detect')
 model.to(device=device)
 
-monitor_size = 200
+monitor_size = 50
 crosshair_x = 2250
 crosshair_y = 1519
 
@@ -53,20 +53,19 @@ cv2.namedWindow("Captured Region", cv2.WINDOW_NORMAL)
 cv2.resizeWindow("Captured Region", 600, 600)    
 print("triggerbot active") 
 while True:
-    if keyboard.is_pressed('p'):
+    if keyboard.is_pressed('f1'):
         print("Exited.")
         break
 
     img = np.array(sct.grab(monitor))
     frame = cv2.cvtColor(img, cv2.COLOR_BGRA2BGR)
     result = model(source=frame, conf=0.5, verbose=False)
-    # boxes = result[0].boxes.xyxy.cpu().numpy() if result[0].boxes.xyxy is not None else []
     
     if detectCharacter(frame) == True:
         pyautogui.click()
 
-    # cv2.imshow("Captured Region", result[0].plot())
-    # if cv2.waitKey(1) & 0xFF == ord('q'):
-    #     break
+    cv2.imshow("Captured Region", result[0].plot())
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
 
 cv2.destroyAllWindows()
