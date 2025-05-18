@@ -11,7 +11,7 @@ device = torch.device("cuda" if CUDA else "cpu")
 model = YOLO('runs/detect/train3/weights/best.pt', task='detect')
 model.to(device=device)
 
-monitor_size = 50
+monitor_size = 90
 crosshair_x = 2250
 crosshair_y = 1519
 
@@ -27,8 +27,7 @@ sct = mss()
 
 
 
-def detectCharacter(frame):
-    results = model(source=frame, conf=0.25, verbose=False)
+def detectCharacter(results):
     for r in results:
         for box in r.boxes:
            # cls_id = int(box.cls[0])
@@ -61,7 +60,7 @@ while True:
     frame = cv2.cvtColor(img, cv2.COLOR_BGRA2BGR)
     result = model(source=frame, conf=0.5, verbose=False)
     
-    if detectCharacter(frame) == True:
+    if detectCharacter(result) == True:
         pyautogui.click()
 
     cv2.imshow("Captured Region", result[0].plot())
