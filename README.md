@@ -1,6 +1,6 @@
 # roblox triggerbot
 
-* main files are yolo.py and train.py
+* main files are triggerbot.py and train.py
 * train.py creates files in runs. you can see the outputted model in the train and then weights under the file extention .pt
 
 
