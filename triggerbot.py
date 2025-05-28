@@ -8,7 +8,7 @@ import keyboard
 
 CUDA = torch.cuda.is_available()
 device = torch.device("cuda" if CUDA else "cpu")
-model = YOLO('runs/detect/train3/weights/best.pt', task='detect')
+model = YOLO('models/best.pt', task='detect')
 model.to(device=device)
 
 monitor_size = 90
