@@ -2,7 +2,7 @@ from ultralytics import YOLO
 import cv2
 import numpy as np
 import pyautogui
-import time, torch
+import torch
 from mss import mss
 import keyboard
 
@@ -45,11 +45,8 @@ def detectCharacter(results):
                 
     return False
 
-
-
-
-cv2.namedWindow("Captured Region", cv2.WINDOW_NORMAL)
-cv2.resizeWindow("Captured Region", 600, 600)    
+# cv2.namedWindow("Captured Region", cv2.WINDOW_NORMAL)
+# cv2.resizeWindow("Captured Region", 600, 600)    
 print("triggerbot active") 
 while True:
     if keyboard.is_pressed('f1'):
@@ -63,8 +60,8 @@ while True:
     if detectCharacter(result) == True:
         pyautogui.click()
 
-    cv2.imshow("Captured Region", result[0].plot())
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
+    # cv2.imshow("Captured Region", result[0].plot())
+    # if cv2.waitKey(1) & 0xFF == ord('q'):
+    #     break
 
-cv2.destroyAllWindows()
+# cv2.destroyAllWindows()
