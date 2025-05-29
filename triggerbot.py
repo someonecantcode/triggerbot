@@ -6,14 +6,24 @@ import torch
 from mss import mss
 import keyboard
 
-CUDA = torch.cuda.is_available()
-device = torch.device("cuda" if CUDA else "cpu")
-model = YOLO('models/best.pt', task='detect')
-model.to(device=device)
+DEBUG_MODE = False
+REFERENCE_WIDTH = 4500
+REFERENCE_HEIGHT = 3000
+REFERENCE_CROSSHAIR_X = 2250
+REFERENCE_CROSSHAIR_Y = 1519
+REFERENCE_MONITOR_SIZE = 90
 
-monitor_size = 90
-crosshair_x = 2250
-crosshair_y = 1519
+# Get current screen resolution
+screen_width, screen_height = pyautogui.size()
+
+# Compute scale factors
+scale_x = screen_width / REFERENCE_WIDTH
+scale_y = screen_height / REFERENCE_HEIGHT
+
+# Scale crosshair and monitor size
+crosshair_x = int(REFERENCE_CROSSHAIR_X * scale_x)
+crosshair_y = int(REFERENCE_CROSSHAIR_Y * scale_y)
+monitor_size = int(REFERENCE_MONITOR_SIZE * ((scale_x + scale_y) / 2))
 
 
 monitor = {
@@ -22,9 +32,14 @@ monitor = {
     "width": monitor_size,
     "height":monitor_size
 }
-center_point = (monitor['width'] // 2, monitor['height'] // 2)
-sct = mss()
 
+center_point = (monitor['width'] // 2, monitor['height'] // 2)
+
+CUDA = torch.cuda.is_available()
+device = torch.device("cuda" if CUDA else "cpu")
+model = YOLO('models/best.pt', task='detect')
+model.to(device=device)
+sct = mss()
 
 
 def detectCharacter(results):
@@ -45,8 +60,10 @@ def detectCharacter(results):
                 
     return False
 
-# cv2.namedWindow("Captured Region", cv2.WINDOW_NORMAL)
-# cv2.resizeWindow("Captured Region", 600, 600)    
+if DEBUG_MODE:
+    cv2.namedWindow("Captured Region", cv2.WINDOW_NORMAL)
+    cv2.resizeWindow("Captured Region", 600, 600)    
+    
 print("triggerbot active") 
 while True:
     if keyboard.is_pressed('f1'):
@@ -60,8 +77,8 @@ while True:
     if detectCharacter(result) == True:
         pyautogui.click()
 
-    # cv2.imshow("Captured Region", result[0].plot())
-    # if cv2.waitKey(1) & 0xFF == ord('q'):
-    #     break
-
-# cv2.destroyAllWindows()
+    if DEBUG_MODE:
+        cv2.imshow("Captured Region", result[0].plot()) 
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+cv2.destroyAllWindows()
